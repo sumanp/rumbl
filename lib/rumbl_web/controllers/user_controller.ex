@@ -4,7 +4,7 @@ defmodule RumblWeb.UserController do
   alias Rumbl.Accounts
   alias Rumbl.Accounts.User
 
-  plug :authenticate when action in [:index, :show] # before_action with function plug
+  plug :authenticate_user when action in [:index, :show] # before_action with function plug
 
   def index(conn, _params) do
     users = Accounts.list_users()
@@ -35,16 +35,6 @@ defmodule RumblWeb.UserController do
     end
   end
 
-  defp authenticate(conn, _opts) do # function plug takes options
-    if conn.assigns.current_user do
-      conn
-    else
-      conn
-      |> put_flash(:error, "You must be logged in to access that page")
-      |> redirect(to: Routes.page_path(conn, :index))
-      |> halt() # stop any downstream transformations
-    end
-  end
   # This pattern of code should be getting familiar to you by now.
   # We keep piping functions together until the conn has the final result that we want.
   # Each function does an isolated transform step.

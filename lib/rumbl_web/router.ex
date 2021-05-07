@@ -20,6 +20,13 @@ defmodule RumblWeb.Router do
     resources "/users", UserController, only: [:index, :show, :new, :create] # run phx.routes to list
     get "/", PageController, :index
     resources "/sessions", SessionController, only: [:new, :create, :delete]
+    # resources "/videos", VideoController
+  end
+
+  scope "/manage", RumblWeb do
+    pipe_through [:browser, :authenticate_user] # pipelines are also plugs, we can use authenticate_user directly in pipe_through
+
+    resources "/videos", VideoController
   end
 
   # Other scopes may use custom stacks.
