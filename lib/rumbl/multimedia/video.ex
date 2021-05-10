@@ -17,5 +17,9 @@ defmodule Rumbl.Multimedia.Video do
     video
     |> cast(attrs, [:url, :title, :description, :category_id])
     |> validate_required([:url, :title, :description])
+    |> assoc_constraint(:category)
   end
 end
+
+# Each changeset encapsulates the whole change policy, including allowed fields,
+# detecting change, validations, and messaging the user.

@@ -3,6 +3,7 @@ defmodule RumblWeb.VideoController do
 
   alias Rumbl.Multimedia
   alias Rumbl.Multimedia.Video
+  plug :load_categories when action in [:new, :create, :edit, :update]
 
   def index(conn, _params, current_user) do
     videos = Multimedia.list_user_videos(current_user)
@@ -65,6 +66,10 @@ defmodule RumblWeb.VideoController do
     apply(__MODULE__, action_name(conn), args)
   end
 
+  defp load_categories(conn, _) do
+    assign(conn, :categories, Multimedia.list_alphabetical_categories())
+  end
+
   #Each controller is also a plug. To call a controller, Phoenix invokes the default action function at the
-  #end of the controller pipeline. We’re replacing it because we want to change the API for all of our controller actions.
+  # end of the controller pipeline. We’re replacing it because we want to change the API for all of our controller actions.
 end
