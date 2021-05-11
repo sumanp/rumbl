@@ -19,11 +19,12 @@ defmodule Rumbl.DataCase do
   using do
     quote do
       alias Rumbl.Repo
-
+      # The using block serves as a place for defining macros, common imports and aliases.
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
       import Rumbl.DataCase
+      import Rumbl.TestHelpers
     end
   end
 
