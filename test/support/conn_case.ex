@@ -23,7 +23,7 @@ defmodule RumblWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import RumblWeb.ConnCase
-
+      import Rumbl.TestHelpers # makes fixtures available for integration tests
       alias RumblWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
