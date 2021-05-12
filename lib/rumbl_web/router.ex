@@ -20,7 +20,7 @@ defmodule RumblWeb.Router do
     resources "/users", UserController, only: [:index, :show, :new, :create] # run phx.routes to list
     get "/", PageController, :index
     resources "/sessions", SessionController, only: [:new, :create, :delete]
-    # resources "/videos", VideoController
+    get "/watch/:id", WatchController, :show
   end
 
   scope "/manage", RumblWeb do

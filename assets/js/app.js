@@ -13,3 +13,16 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
+
+
+
+// Video player
+import Player from "./player"
+
+let video = document.getElementById("video")
+
+if(video) {
+  Player.init(video.id, video.getAttribute("data-player-id"), () => {
+    console.log("player ready!")
+  })
+}
