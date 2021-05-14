@@ -7,7 +7,6 @@ defmodule Rumbl.Multimedia do
   alias Rumbl.Repo
   alias Rumbl.Accounts
   alias Rumbl.Multimedia.Video
-  alias Rumbl.Multimedia.Category
 
   @doc """
   Returns the list of videos.
@@ -120,6 +119,8 @@ defmodule Rumbl.Multimedia do
     from(v in query, where: v.user_id == ^user_id)
   end
 
+  alias Rumbl.Multimedia.Category
+
   def create_category!(name) do # Note: every db operation is exposed as context API.
    # Changesets along with complex queries are defined in private context
     Repo.insert!(%Category{name: name}, on_conflict: :nothing)
@@ -129,5 +130,22 @@ defmodule Rumbl.Multimedia do
     Category
     |> Category.alphabetical()
     |> Repo.all()
+  end
+
+  alias Rumbl.Multimedia.Annotation
+
+  def annotate_video(%Accounts.User{id: user_id}, video_id, attrs) do
+    %Annotation{video_id: video_id, user_id: user_id}
+    |> Annotation.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def list_annotations(%Video{} = video) do
+    Repo.all(
+      from a in Ecto.assoc(video, :annotations),
+        order_by: [asc: a.at, asc: a.id],
+        limit: 500,
+        preload: [:user]
+    )
   end
 end
