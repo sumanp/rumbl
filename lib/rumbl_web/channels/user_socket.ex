@@ -20,6 +20,9 @@ defmodule RumblWeb.UserSocket do
     {:ok, socket}
   end
 
+  # The connect function decides whether to make a connection.
+  # It receives the connection parameters, the connection socket, and a map of advanced connection information.
+
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
   #     def id(socket), do: "user_socket:#{socket.assigns.user_id}"
@@ -33,3 +36,6 @@ defmodule RumblWeb.UserSocket do
   @impl true
   def id(_socket), do: nil
 end
+
+# The id function lets us identify the socket based on some state stored
+# in the socket itself, like the user ID
