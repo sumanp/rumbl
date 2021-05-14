@@ -17,11 +17,41 @@ let Video = {
     let postButton   = document.getElementById("msg-submit")
     let vidChannel   = socket.channel("videos:" + videoId)
 
+    postButton.addEventListener("click", e => {
+      let payload = {body: msgInput.value, at: Player.getCurrentTime()}
+      vidChannel.push("new_annotation", payload)
+                .receive("error", e => console.log(e) )
+      msgInput.value = "" //clear the input after push
+    })
+
+    vidChannel.on("new_annotation", (resp) => {
+      this.renderAnnotation(msgContainer, resp)
+    })
+
     vidChannel.join()
       .receive("ok", resp => console.log("joined the video channel", resp) )
       .receive("error", reason => console.log("join failed", reason) )
+  },
 
-    vidChannel.on("ping", ({count}) => console.log("PING", count) )
+  esc(str){
+    // we define an esc function on line 1 to safely escape user input
+    // before injecting values into the page. This strategy protects our users from XSS attacks.
+    let div = document.createElement("div")
+    div.appendChild(document.createTextNode(str))
+    return div.innerHTML
+  },
+
+  renderAnnotation(msgContainer, {user, body, at}){
+    // append annotation to msgContainer
+    let template = document.createElement("div")
+
+    template.innerHTML = `
+    <a href="#" data-seek="${this.esc(at)}">
+      <b>${this.esc(user.username)}</b>: ${this.esc(body)}
+    </a>
+    `
+    msgContainer.appendChild(template)
+    msgContainer.scrollTop = msgContainer.scrollHeight
   }
 }
 export default Video

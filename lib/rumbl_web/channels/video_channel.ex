@@ -2,16 +2,18 @@ defmodule RumblWeb.VideoChannel do
   use RumblWeb, :channel
 
   def join("videos:" <> video_id, _params, socket) do
-    :timer.send_interval(5_000, :ping)
     {:ok, socket}
     # sockets will hold all of the state for a given conversation
   end
 
-  def handle_info(:ping, socket) do
-    count = socket.assigns[:count] || 1
-    push(socket, "ping", %{count: count})
+  def handle_in("new_annotation", params, socket) do
+    broadcast!(socket, "new_annotation", %{ #filter params to restrict unwanted messages from client
+      user: %{username: "anon"},
+      body: params["body"],
+      at: params["at"]
+    })
 
-    {:noreply, assign(socket, :count, count + 1)} #:noreply means we’re not sending a reply
+    {:reply, :ok, socket}
   end
 end
 
